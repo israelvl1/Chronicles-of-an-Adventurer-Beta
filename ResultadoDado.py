@@ -1,4 +1,11 @@
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QPushButton, QVBoxLayout
+from PyQt6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QWidget,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+)
 from PyQt6.QtOpenGLWidgets import QOpenGLWidget
 from PyQt6.QtCore import QTimer, Qt, pyqtSignal, QObject, QEventLoop, QByteArray
 from OpenGL.GL import *
@@ -14,7 +21,9 @@ icone_base64 = b"""AAABAAEAAAAAAAEAIAAZygAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAEAAAABA
 
 # Classe que representa um dado 3D renderizado com OpenGL
 class Dado3D(QOpenGLWidget):
-    dadoParou = pyqtSignal(int)  # Sinal emitido quando o dado para, com o valor da face visível
+    dadoParou = pyqtSignal(
+        int
+    )  # Sinal emitido quando o dado para, com o valor da face visível
 
     def __init__(self):
         super().__init__()
@@ -24,7 +33,9 @@ class Dado3D(QOpenGLWidget):
         self.zRot = 0
 
         self.paused = False  # Indica se o dado está pausado (parado)
-        self.update_value_callback = None  # Função de callback para passar o valor visível
+        self.update_value_callback = (
+            None  # Função de callback para passar o valor visível
+        )
         self.face_central = None  # Face atual mais voltada para a câmera
 
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)  # Permite foco no teclado
@@ -39,8 +50,8 @@ class Dado3D(QOpenGLWidget):
         # Timer que para automaticamente após alguns segundos
         self.auto_stop_timer = None
         self.auto_stop_time = 3  # Tempo limite em segundos
-    
-   def start_rolling(self, use_auto_stop=True):
+
+    def start_rolling(self, use_auto_stop=True):
         """Inicia a rotação do dado"""
         self.paused = False
         if use_auto_stop:
@@ -66,9 +77,9 @@ class Dado3D(QOpenGLWidget):
     def initializeGL(self):
         """Inicializa o contexto OpenGL"""
         glClearColor(0.1, 0.1, 0.1, 1)  # Cor de fundo
-        glEnable(GL_DEPTH_TEST)        # Ativa profundidade
-        glShadeModel(GL_SMOOTH)        # Sombreamento suave
-        glutInit(sys.argv)             # Inicializa GLUT (necessário para desenhar texto)
+        glEnable(GL_DEPTH_TEST)  # Ativa profundidade
+        glShadeModel(GL_SMOOTH)  # Sombreamento suave
+        glutInit(sys.argv)  # Inicializa GLUT (necessário para desenhar texto)
 
     def keyPressEvent(self, event):
         """Captura teclas pressionadas"""
@@ -79,8 +90,7 @@ class Dado3D(QOpenGLWidget):
             else:
                 self.update_visible_face()
 
-
-     def resizeGL(self, w, h):
+    def resizeGL(self, w, h):
         """Atualiza a viewport quando a janela é redimensionada"""
         glViewport(0, 0, w, h)
         glMatrixMode(GL_PROJECTION)
@@ -114,26 +124,56 @@ class Dado3D(QOpenGLWidget):
         # Icosaedro
         phi = (1 + math.sqrt(5)) / 2
         vertices = [
-            [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-            [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-            [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
+            [-1, phi, 0],
+            [1, phi, 0],
+            [-1, -phi, 0],
+            [1, -phi, 0],
+            [0, -1, phi],
+            [0, 1, phi],
+            [0, -1, -phi],
+            [0, 1, -phi],
+            [phi, 0, -1],
+            [phi, 0, 1],
+            [-phi, 0, -1],
+            [-phi, 0, 1],
         ]
         faces = [
-            [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11],
-            [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8],
-            [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9],
-            [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]
+            [0, 11, 5],
+            [0, 5, 1],
+            [0, 1, 7],
+            [0, 7, 10],
+            [0, 10, 11],
+            [1, 5, 9],
+            [5, 11, 4],
+            [11, 10, 2],
+            [10, 7, 6],
+            [7, 1, 8],
+            [3, 9, 4],
+            [3, 4, 2],
+            [3, 2, 6],
+            [3, 6, 8],
+            [3, 8, 9],
+            [4, 9, 5],
+            [2, 4, 11],
+            [6, 2, 10],
+            [8, 6, 7],
+            [9, 8, 1],
         ]
 
         # Normais das faces
         normals = []
         for face in faces:
             v0, v1, v2 = [array(vertices[i]) for i in face]
-            normal = array([
-                (v1[1] - v0[1]) * (v2[2] - v0[2]) - (v1[2] - v0[2]) * (v2[1] - v0[1]),
-                (v1[2] - v0[2]) * (v2[0] - v0[0]) - (v1[0] - v0[0]) * (v2[2] - v0[2]),
-                (v1[0] - v0[0]) * (v2[1] - v0[1]) - (v1[1] - v0[1]) * (v2[0] - v0[0])
-            ])
+            normal = array(
+                [
+                    (v1[1] - v0[1]) * (v2[2] - v0[2])
+                    - (v1[2] - v0[2]) * (v2[1] - v0[1]),
+                    (v1[2] - v0[2]) * (v2[0] - v0[0])
+                    - (v1[0] - v0[0]) * (v2[2] - v0[2]),
+                    (v1[0] - v0[0]) * (v2[1] - v0[1])
+                    - (v1[1] - v0[1]) * (v2[0] - v0[0]),
+                ]
+            )
             normal = normal / norm(normal)
             normals.append(normal)
 
@@ -143,15 +183,15 @@ class Dado3D(QOpenGLWidget):
 
             # X
             cx, sx = cos(rx), sin(rx)
-            v = array([v[0], v[1]*cx - v[2]*sx, v[1]*sx + v[2]*cx])
+            v = array([v[0], v[1] * cx - v[2] * sx, v[1] * sx + v[2] * cx])
 
             # Y
             cy, sy = cos(ry), sin(ry)
-            v = array([v[0]*cy + v[2]*sy, v[1], -v[0]*sy + v[2]*cy])
+            v = array([v[0] * cy + v[2] * sy, v[1], -v[0] * sy + v[2] * cy])
 
             # Z
             cz, sz = cos(rz), sin(rz)
-            v = array([v[0]*cz - v[1]*sz, v[0]*sz + v[1]*cz, v[2]])
+            v = array([v[0] * cz - v[1] * sz, v[0] * sz + v[1] * cz, v[2]])
 
             return v
 
@@ -181,6 +221,7 @@ class Dado3D(QOpenGLWidget):
     def cor_suave(self):
         """Gera uma cor aleatória suave"""
         import random
+
         r = random.uniform(0.4, 0.9)
         g = random.uniform(0.4, 0.9)
         b = random.uniform(0.4, 0.9)
@@ -192,20 +233,45 @@ class Dado3D(QOpenGLWidget):
         # Desenha com OpenGL: superfícies, contornos e números nas faces
         # Utiliza a cor gerada anteriormente para pintar o dado
         phi = (1 + math.sqrt(5)) / 2
-    
+
         vertices = [
-            [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-            [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-            [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
+            [-1, phi, 0],
+            [1, phi, 0],
+            [-1, -phi, 0],
+            [1, -phi, 0],
+            [0, -1, phi],
+            [0, 1, phi],
+            [0, -1, -phi],
+            [0, 1, -phi],
+            [phi, 0, -1],
+            [phi, 0, 1],
+            [-phi, 0, -1],
+            [-phi, 0, 1],
         ]
-    
+
         faces = [
-            [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11],
-            [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8],
-            [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9],
-            [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]
+            [0, 11, 5],
+            [0, 5, 1],
+            [0, 1, 7],
+            [0, 7, 10],
+            [0, 10, 11],
+            [1, 5, 9],
+            [5, 11, 4],
+            [11, 10, 2],
+            [10, 7, 6],
+            [7, 1, 8],
+            [3, 9, 4],
+            [3, 4, 2],
+            [3, 2, 6],
+            [3, 6, 8],
+            [3, 8, 9],
+            [4, 9, 5],
+            [2, 4, 11],
+            [6, 2, 10],
+            [8, 6, 7],
+            [9, 8, 1],
         ]
-    
+
         # Desenha as faces
         if not self.cor_atual or len(self.cor_atual) != 3:
             self.cor_atual = (1.0, 1.0, 1.0)  # fallback
@@ -218,7 +284,6 @@ class Dado3D(QOpenGLWidget):
                 glVertex3fv(vertices[vertex])
         glEnd()
 
-    
         # Desenha as bordas (linhas pretas)
         glColor3f(0.0, 0.0, 0.0)
         glLineWidth(2.0)
@@ -227,10 +292,10 @@ class Dado3D(QOpenGLWidget):
             for vertex in face:
                 glVertex3fv(vertices[vertex])
             glEnd()
-    
+
         # Números nas faces
         self.draw_numbers(vertices, faces)
-    
+
     def draw_number_centered(self, number):
         """Desenha um número centralizado na tela (usado durante pausa)"""
         # Desenha número grande no centro da tela usando fonte vetorial
@@ -262,7 +327,6 @@ class Dado3D(QOpenGLWidget):
         glPopMatrix()
         glMatrixMode(GL_MODELVIEW)
 
-
     def draw_numbers(self, vertices, faces):
         """Desenha os números nas faces do icosaedro"""
         # Calcula o centro e orientação de cada face
@@ -280,7 +344,7 @@ class Dado3D(QOpenGLWidget):
             center = [
                 (v0[0] + v1[0] + v2[0]) / 3.0,
                 (v0[1] + v1[1] + v2[1]) / 3.0,
-                (v0[2] + v1[2] + v2[2]) / 3.0
+                (v0[2] + v1[2] + v2[2]) / 3.0,
             ]
 
             # Normal da face (para orientação)
@@ -313,18 +377,18 @@ class Dado3D(QOpenGLWidget):
 
             if abs(angle) > 0.01:
                 glRotatef(angle, *axis)
-    
+
             # Escala e move um pouco para que o número não fique "afundado"
             glTranslatef(-0.05 * len(str(numbers[i])), -0.05, 0.01)
             glScalef(0.0015, 0.0015, 0.0015)  # Escala para tamanho adequado
 
             glColor3f(0, 0, 0)
             for ch in str(numbers[i]):
-                glutStrokeCharacter(GLUT_STROKE_ROMAN, ord(ch))  # Stroke = vetor, pode ser rotacionado
+                glutStrokeCharacter(
+                    GLUT_STROKE_ROMAN, ord(ch)
+                )  # Stroke = vetor, pode ser rotacionado
 
             glPopMatrix()
-
-    
 
     def update_rotation(self):
         """Atualiza os ângulos de rotação (usado pelo timer de animação)"""
@@ -333,7 +397,7 @@ class Dado3D(QOpenGLWidget):
             self.yRot += 1.8
             self.zRot += 1.0
             self.update()  # Força redesenho
-    
+
     def closeEvent(self, event):
         # Cancela o auto_stop_timer ao fechar a tela
         if self.auto_stop_timer is not None:
@@ -413,7 +477,9 @@ class MainWindow(QMainWindow):
         # Timer usado para controlar quanto tempo o resultado fica visível
         self.resultadoTimer = QTimer()
         self.resultadoTimer.setSingleShot(True)  # Só dispara uma vez
-        self.resultadoTimer.timeout.connect(self.finalizar_resultado)  # Quando acabar chama função
+        self.resultadoTimer.timeout.connect(
+            self.finalizar_resultado
+        )  # Quando acabar chama função
 
         # Define o callback que atualiza o valor visível do dado (usado pelo widget 3D)
         self.glWidget.update_value_callback = self.update_resultado
@@ -427,8 +493,6 @@ class MainWindow(QMainWindow):
         # Loop de evento usado para "bloquear" o programa até o dado parar
         self.loop = None
 
-        
-    
     # Quando a janela for mostrada, começa a rotação do dado automaticamente
     def showEvent(self, event):
         super().showEvent(event)
@@ -472,7 +536,7 @@ class MainWindow(QMainWindow):
         self.resultadoWidget.set_valor(f"Dano: {int(dano)}")
         self.resultadoWidget.move(
             self.x() + self.width() // 2 - self.resultadoWidget.width() // 2,
-            self.y() + self.height() // 2 - self.resultadoWidget.height() // 2
+            self.y() + self.height() // 2 - self.resultadoWidget.height() // 2,
         )
         self.resultadoWidget.show()
 
