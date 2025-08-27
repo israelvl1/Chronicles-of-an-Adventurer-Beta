@@ -1,28 +1,33 @@
 import sys
 import os
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import tkinter as tk
 from tkinter import messagebox
 import time
 import sys
 
+
 def perguntar():
-    # Variável interna para capturar a resposta
+    # Dicionário para armazenar a escolha do usuário ("Sim" ou "Não")
     escolha = {"valor": None}
 
-    # Funções dos botões
+    # Função chamada quando o botão "Sim" é clicado
     def minha_funcao():
-        escolha["valor"] = "Sim"
-        root.destroy()
+        escolha["valor"] = "Sim"  # Armazena a resposta
+        root.destroy()  # Fecha a janela
 
+    # Função chamada quando o botão "Não" é clicado
     def outra_funcao():
-        escolha["valor"] = "Não"
-        root.destroy()
-    
-    def mostrar_botoes():
-        botoes_frame = tk.Frame(frame, bg="black")
-        botoes_frame.pack(pady=20)
+        escolha["valor"] = "Não"  # Armazena a resposta
+        root.destroy()  # Fecha a janela
 
+    # Função que cria e exibe os botões "Sim" e "Não"
+    def mostrar_botoes():
+        botoes_frame = tk.Frame(frame, bg="black")  # Frame para agrupar os botões
+        botoes_frame.pack(pady=20)  # Espaçamento vertical
+
+        # Botão "Sim" com estilos personalizados
         button_sim = tk.Button(
             botoes_frame,
             text="Sim",
@@ -30,10 +35,13 @@ def perguntar():
             bg="black",
             fg="lime",
             activebackground="darkgreen",
-            activeforeground="orange"
+            activeforeground="orange",
         )
-        button_sim.pack(side="left", padx=10)
+        button_sim.pack(
+            side="left", padx=10
+        )  # Empacota à esquerda com espaçamento horizontal
 
+        # Botão "Não" com estilos personalizados
         button_nao = tk.Button(
             botoes_frame,
             text="Não",
@@ -41,45 +49,53 @@ def perguntar():
             bg="black",
             fg="lime",
             activebackground="darkgreen",
-            activeforeground="orange"
+            activeforeground="orange",
         )
-        button_nao.pack(side="left", padx=10) 
-        
+        button_nao.pack(side="left", padx=10)
+
+    # Cria a janela principal do Tkinter
     root = tk.Tk()
     root.title("Projeto RPG")
-    root.geometry("800x600")
-    root.resizable(False, False)
-    root.configure(bg="black")
-    # Impede o fechamento da janela pelo botão X
+    root.geometry("800x600")  # Define tamanho fixo da janela
+    root.resizable(False, False)  # Desativa redimensionamento
+    root.configure(bg="black")  # Define fundo preto
+
+    # Impede o fechamento da janela pelo botão X (a função nao_fechar não está definida aqui)
     root.protocol("WM_DELETE_WINDOW", nao_fechar)
 
+    # Cria um frame dentro da janela para organizar widgets
     frame = tk.Frame(root, bg="black")
     frame.pack(fill="both", expand=True)
-    
-    # Chama a função para mostrar a primeira imagem
-    mostrar_primeira_imagem(frame, root)
-    limpar_tela(frame)
-    trocar_imagem(frame, root)
-    # Só mostra os botões após 1 segundos
+
+    # Estas funções devem existir no seu código (não estão definidas aqui)
+    mostrar_primeira_imagem(frame, root)  # Mostra a primeira imagem na tela
+    limpar_tela(frame)  # Limpa a tela, removendo widgets anteriores
+    trocar_imagem(frame, root)  # Troca a imagem exibida (talvez animação ou sequência)
+
+    # Depois de 1 segundo, chama a função que exibe os botões "Sim" e "Não"
     root.after(1000, mostrar_botoes)
-    
+
+    # Inicia o loop principal da interface gráfica, que fica aguardando interações
     root.mainloop()
+
+    # Retorna o valor escolhido ("Sim" ou "Não")
     return escolha["valor"]
-        
-# Função para limpar a tela do Tkinter
+
+
+# Função para limpar todos os widgets dentro do frame (útil para trocar telas)
 def limpar_tela(frame):
     for widget in frame.winfo_children():
-        widget.destroy()
+        widget.destroy()  # Remove cada widget filho do frame
 
 
-# Função para escrever o texto ASCII lentamente
+# Função para escrever texto ASCII lentamente em um label (efeito de digitação)
 def escrever_ascii(texto, label):
     texto_final = ""
     for letra in texto:
         texto_final += letra
-        label.config(text=texto_final)
-        label.update()
-        time.sleep(0.00001)
+        label.config(text=texto_final)  # Atualiza o texto do label
+        label.update()  # Força a atualização visual do label
+        time.sleep(0.00001)  # Pequena pausa para o efeito "máquina de escrever"
 
 # Mostrar a primeira imagem
 def mostrar_primeira_imagem(frame, root):
@@ -200,64 +216,76 @@ def trocar_imagem(frame, root):
 
     escrever_ascii(ascii2, label_novo)
     
+# Função para impedir que o usuário feche a janela pelo botão X
 def nao_fechar():
+    # Mostra uma mensagem de aviso que a janela não pode ser fechada agora
     messagebox.showwarning("Atenção", "Você não pode fechar esta janela agora.")  
-    
-# Exibir mensagem fixa após confirmação no terminal
+
+# Função para exibir uma janela com uma mensagem fixa (ex: imagem ASCII)
 def exibir_mensagem_fixa():
-    root = tk.Tk()
-    root.title("Imagens ASCII")
-    root.geometry("700x300")
-    root.resizable(False, False)
-    root.configure(bg="black")
-    # Impede o fechamento da janela pelo botão X
+    root = tk.Tk()                     # Cria a janela principal
+    root.title("Imagens ASCII")        # Define o título da janela
+    root.geometry("700x300")            # Define o tamanho fixo da janela
+    root.resizable(False, False)        # Impede redimensionamento
+    root.configure(bg="black")          # Fundo preto
+
+    # Bloqueia o fechamento da janela pelo botão X, chamando a função nao_fechar
     root.protocol("WM_DELETE_WINDOW", nao_fechar)
 
-    frame = tk.Frame(root, bg="black")
-    frame.pack(fill="both", expand=True)
+    frame = tk.Frame(root, bg="black")  # Cria um frame para organização
+    frame.pack(fill="both", expand=True) # Ocupa toda a janela
 
-    mostrar_terceira_imagem(frame)
-    limpar_tela(frame)
-    root.destroy()
+    mostrar_terceira_imagem(frame)      # Exibe a terceira imagem (função externa)
 
-    root.mainloop()
+    limpar_tela(frame)                  # Limpa a tela, removendo widgets (curioso: já chamou imagem antes)
 
+    root.destroy()                     # Fecha a janela imediatamente (curioso aqui também)
+
+    root.mainloop()                    # Inicia o loop da interface (mas janela já foi destruída!)
+
+# Função para exibir uma janela com mensagem de erro
 def exibir_mensagem_erro():
     root = tk.Tk()
     root.title("Imagens ASCII")
     root.geometry("700x300")
     root.resizable(False, False)
     root.configure(bg="black")
-    # Impede o fechamento da janela pelo botão X
+
     root.protocol("WM_DELETE_WINDOW", nao_fechar)
 
     frame = tk.Frame(root, bg="black")
     frame.pack(fill="both", expand=True)
 
-    mostrar_erro_imagem(frame)
-    limpar_tela(frame)
-    root.destroy()
+    mostrar_erro_imagem(frame)          # Exibe uma imagem de erro (função externa)
 
-    root.mainloop()
+    limpar_tela(frame)                  # Limpa o frame
 
+    root.destroy()                     # Fecha a janela imediatamente
+
+    root.mainloop()                    # Inicia o loop da interface (mesmo problema aqui)
+
+# Função para exibir uma mensagem final (ex: fim do programa) com pausa antes de fechar
 def exibir_mensagem_final():
     root = tk.Tk()
     root.title("Imagens ASCII")
     root.geometry("700x300")
     root.resizable(False, False)
     root.configure(bg="black")
-    # Impede o fechamento da janela pelo botão X
+
     root.protocol("WM_DELETE_WINDOW", nao_fechar)
 
     frame = tk.Frame(root, bg="black")
     frame.pack(fill="both", expand=True)
 
-    mostrar_fim(frame)
-    limpar_tela(frame)
-    time.sleep(5)
-    root.destroy()
+    mostrar_fim(frame)                 # Exibe mensagem/fim (função externa)
 
-    root.mainloop()
+    limpar_tela(frame)                 # Limpa o frame
+
+    time.sleep(5)                     # Pausa de 5 segundos para o usuário ver a mensagem
+
+    root.destroy()                    # Fecha a janela
+
+    root.mainloop()                   # Inicia o loop da interface (ainda com problema de ordem)
 
 # Mostrar a terceira imagem
 def mostrar_terceira_imagem(frame):
