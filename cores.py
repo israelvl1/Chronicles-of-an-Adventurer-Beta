@@ -122,9 +122,3 @@ class TelaSimples(QDialog):
             # Fecha a janela principal
             if self.parent():
                 self.parent().close()  # Fecha a janela principal (se houver)
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    janela = TelaCores()
-    janela.show()
-    sys.exit(app.exec())
