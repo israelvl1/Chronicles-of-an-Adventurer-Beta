@@ -1,33 +1,46 @@
-import random  # importando a biblioteca random
+import random  # Biblioteca para gerar números aleatórios
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import time  # time
-from Personagem import *  # puxar funções
-from Entrada import *  # puxar entradas
-import ctypes
-import time
 
+sys.path.append(
+    os.path.dirname(os.path.abspath(__file__))
+)  # Adiciona o diretório atual no caminho de importação
+import time  # Biblioteca para lidar com tempo (pausas)
+from Personagem import *  # Importa tudo da classe Personagem
+from Entrada import *  # Importa funções de entrada (presumivelmente)
+import ctypes  # Usado para manipular janelas no Windows
+
+# Função para imprimir texto "digitando" letra a letra, com uma pausa entre caracteres
 def digitar(texto, velocidade=0.03):
     for char in texto:
-        sys.stdout.write(char)
-        sys.stdout.flush()
-        time.sleep(velocidade)
-    print()  # quebra de linha no final
+        sys.stdout.write(char)  # Escreve caractere sem quebra de linha
+        sys.stdout.flush()  # Garante que apareça imediatamente
+        time.sleep(velocidade)  # Pausa para efeito de digitação
+    print()  # Quebra de linha no final
 
+
+# Função para fechar o prompt/terminal (especialmente no Windows)
 def fechar_prompt():
-    if os.name == "nt":  # Windows
-        # Pega o handle da janela do console atual
-        hwnd = ctypes.windll.kernel32.GetConsoleWindow()
+    if os.name == "nt":  # Se for Windows
+        hwnd = (
+            ctypes.windll.kernel32.GetConsoleWindow()
+        )  # Pega o handle da janela do console
         if hwnd != 0:
-            ctypes.windll.user32.PostMessageW(hwnd, 0x0010, 0, 0)  # 0x0010 = WM_CLOSE
-    sys.exit()
+            ctypes.windll.user32.PostMessageW(
+                hwnd, 0x0010, 0, 0
+            )  # Envia mensagem para fechar a janela (WM_CLOSE)
+    sys.exit()  # Sai do programa
 
-def criar_personagem(gerenciador):  # criar personagem
-    nome = input("Digite o nome do seu personagem: ").capitalize()  # escolhe nome
-    exibir_mensagem_fixa()
-    sexo = input("Sexo do personagem: ").capitalize()  # escolhe sexo
 
+# Função para criar um personagem com base na entrada do usuário
+def criar_personagem(gerenciador):
+    nome = input(
+        "Digite o nome do seu personagem: "
+    ).capitalize()  # Recebe nome e capitaliza
+    exibir_mensagem_fixa()  # Exibe mensagem (função externa)
+    sexo = input("Sexo do personagem: ").capitalize()  # Recebe sexo e capitaliza
+
+    # Verifica se sexo está correto; caso contrário, exibe erro e fecha programa
     if sexo == "Masculino" or sexo == "Feminino":
         print("")
     else:
@@ -35,38 +48,61 @@ def criar_personagem(gerenciador):  # criar personagem
         time.sleep(3)
         fechar_prompt()
 
-
+    # Menu para escolher modo de definir vida
     print("\nComo você quer definir a vida do personagem?")
     print("[F] Fixa (escolher entre valores pré-definidos até 600)")
     print("[A] Aleatória (entre 1 e 600)")
     print("[U] Usuário escolhe qualquer valor (até 600)")
 
-    modo = input("Escolha (F/A/U): ").strip().lower()
+    modo = (
+        input("Escolha (F/A/U): ").strip().lower()
+    )  # Recebe escolha do modo e converte para minúsculo
 
     if modo == "f":
-        opcoes_fixas = [600, 500, 400, 300, 250, 200, 150, 120, 100, 80, 60, 40, 20, 10, 1]
+        opcoes_fixas = [
+            600,
+            500,
+            400,
+            300,
+            250,
+            200,
+            150,
+            120,
+            100,
+            80,
+            60,
+            40,
+            20,
+            10,
+            1,
+        ]
         print("\nEscolha uma vida fixa:")
+        # Mostra as opções numeradas para o usuário escolher
         for i, valor in enumerate(opcoes_fixas, 1):
             print(f"{i} - {valor} pontos de vida")
 
         try:
-            escolha = int(input(f"Digite o número de 1 a {len(opcoes_fixas)}: "))
+            escolha = int(
+                input(f"Digite o número de 1 a {len(opcoes_fixas)}: ")
+            )  # Recebe escolha
             if 1 <= escolha <= len(opcoes_fixas):
-                vida = opcoes_fixas[escolha - 1]
+                vida = opcoes_fixas[escolha - 1]  # Seleciona o valor correspondente
             else:
-                print("Escolha inválida. Definindo vida como 120.")
+                print("Escolha inválida. Definindo vida como 120.")  # Valor padrão
                 vida = 120
         except ValueError:
-            print("Entrada inválida. Definindo vida como 120.")
+            print(
+                "Entrada inválida. Definindo vida como 120."
+            )  # Caso o usuário não digite número
             vida = 120
 
-    elif modo == "a":
-        vida = random.randint(1, 600)
+    elif modo == "a":  # Modo aleatório
+        vida = random.randint(1, 600)  # Gera valor aleatório de vida entre 1 e 600
 
-    elif modo == "u":
+    elif modo == "u":  # Modo usuário escolhe livremente
         try:
             vida = int(input("Digite a vida desejada (máximo 600): "))
-            if vida > 600 or vida < 1:
+            if vida > 600 or vida < 1:  # Valida limites
                 print("Valor fora do limite. Definindo vida como 120.")
                 vida = 120
         except ValueError:
@@ -74,25 +110,33 @@ def criar_personagem(gerenciador):  # criar personagem
             vida = 120
 
     else:
-        print("Modo inválido. Usando vida padrão 120.")
+        print("Modo inválido. Usando vida padrão 120.")  # Caso o modo seja inválido
         vida = 120
 
+    # Cria a instância do personagem com nome, vida, sexo e o gerenciador de dados
     personagem = Personagem(nome, vida, sexo, gerenciador)
-    personagem.modo_vida = modo
+    personagem.modo_vida = modo  # Armazena o modo de vida escolhido
     print(
         f"\nFicha criada! {personagem.nome}, {personagem.sexo}, {personagem.vida} de vida.\n"
-    )  # ficha do personagem
-    return personagem
+    )  # Mostra ficha criada para o usuário
+    return personagem  # Retorna o objeto criado
 
-def limpar_tela():  # Função limpa tela
+
+# Função para limpar o terminal (tela do prompt)
+def limpar_tela():
     """Limpa a tela do terminal"""
-    os.system("cls" if os.name == "nt" else "clear")
+    os.system("cls" if os.name == "nt" else "clear")  # Comando para Windows e Unix
 
-def chance(p):  ##calcular depedendo de quanto a pessoa precisa
-    return random.randint(1, 100) <= p
 
-def tentar_desviar(porcentagem):  # chance de desviar do inimigo
-    return random.randint(1, 100) <= porcentagem
+# Função para gerar uma chance/probabilidade
+def chance(p):
+    return random.randint(1, 100) <= p  # Retorna True se número aleatório <= p
+
+
+# Função para tentar desviar de um ataque com uma porcentagem de sucesso
+def tentar_desviar(porcentagem):
+    return random.randint(1, 100) <= porcentagem  # Retorna True se desviar com sucesso
+
     
 def jogar():
     while True:
