@@ -196,8 +196,7 @@ def jogar():
                         print(f"\n--- Turno {turno} ---")
                         heroi.atacar(goblin)
                     else:
-                        print(f"\n--- Turno {turno} ---")
-                        heroi.atacar(goblin)
+                        print("⚠️ Escolha inválida! Digite 1")
 
                     if goblin.esta_vivo():  # se o goblin estiver vivo, então ele atacar
 
@@ -321,8 +320,7 @@ def jogar():
                     heroi.tomar_pocao()
 
                 else:
-                    print(f"\n--- Turno {turno} ---")
-                    heroi.atacar(slime)
+                    print("⚠️ Escolha inválida! Digite 1 ou 2")
 
                 # Slime ataca, se estiver vivo
                 if slime.esta_vivo():
@@ -473,8 +471,7 @@ def jogar():
                     heroi.tomar_pocao()
 
                 else:
-                    print(f"\n--- Turno {turno} ---")
-                    heroi.atacar(orc)
+                    print("⚠️ Escolha inválida! Digite 1 ou 2")
 
                 # orc ataca, se estiver vivo
                 if orc.esta_vivo():
@@ -599,8 +596,7 @@ def jogar():
                     heroi.tomar_pocao()
 
                 else:
-                    print(f"\n--- Turno {turno} ---")
-                    heroi.atacar(necromante)
+                    print("⚠️ Escolha inválida! Digite 1 ou 2")
 
                 # necromante ataca, se estiver vivo
                 if necromante.esta_vivo():
@@ -623,8 +619,7 @@ def jogar():
                                 heroi.tomar_pocao()
 
                             else:
-                                print(f"\n--- Turno {turno} ---")
-                                heroi.atacar(esqueleto)
+                                print("⚠️ Escolha inválida! Digite 1 ou 2")
 
                             if (
                                 esqueleto.esta_vivo()
@@ -935,8 +930,7 @@ def jogar():
                     heroi.tomar_pocao()
 
                 else:
-                    print(f"\n--- Turno {turno} ---")
-                    heroi.atacar(dragao)
+                    print("⚠️ Escolha inválida! Digite 1 ou 2")
 
                     # orc ataca, se estiver vivo
                 if dragao.esta_vivo():
@@ -1063,8 +1057,7 @@ def jogar():
                     heroi.tomar_pocao()
 
                 else:
-                    print(f"\n--- Turno {turno} ---")
-                    heroi.atacar(traidor)
+                    print("⚠️ Escolha inválida! Digite 1 ou 2")
 
                     # traidor ataca, se estiver vivo
                 if traidor.esta_vivo():
