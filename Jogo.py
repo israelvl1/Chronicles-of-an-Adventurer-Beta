@@ -833,21 +833,21 @@ def jogar():
                     else:
                         continue
 
-            digitar(f'"Mas finalmente estamos chegando no nosso destino!"')
+            digitar('"Mas finalmente estamos chegando ao nosso destino!"')
             digitar(
-                "Continuam aprofundando na caverna até que finalmente os dois se aproximam de um grande portão feito de ouro."
+                "Eles continuaram se aprofundando na caverna até que, finalmente, se aproximaram de um grande portão feito de ouro."
             )
             time.sleep(2)
             digitar(
-                f'"Finalmente chegamos no nosso destino!"'
-                "O meu companheiro transparencia um sorriso grande."
+                '"Finalmente chegamos ao nosso destino!" — exclamou um deles, com um largo sorriso estampado no rosto.'
             )
             digitar(
-                f"{heroi.nome} firmou as mãos sobre a porta e empurrava as portas e no mesmo momento abria o portão."
+                f"{heroi.nome} firmou as mãos sobre a porta dourada e, com um empurrão determinado, abriu o portão com um estrondo."
             )
             digitar(
-                "Entravam dentro da sala do tesouro, enquanto entrava dava para ver montes de dinheiro."
+                "Ao entrarem na sala do tesouro, seus olhos se depararam com montes de ouro reluzente espalhados por toda parte."
             )
+
             time.sleep(2)
             dragao = Personagem("Dragão", 600, "monstro")
             dragao_dormindo = 0
@@ -906,19 +906,20 @@ def jogar():
                     dragao_dormindo += 1
 
             digitar(
-                "De repente, um rugido profundo e estrondoso ecoou pela caverna, como um trovão que se aproximava. As paredes tremiam, e o ar ao nosso redor parecia vibrar com a força do som. Com um enorme estalo, as asas do dragão bateram, criando um vento tão forte que quase fomos derrubados. O monstro estava acordando."
+                "De repente, um rugido profundo e estrondoso ecoou pela caverna, como um trovão que se aproximava. As paredes tremiam, e o ar ao redor vibrava com a força do som. Com um enorme estalo, as asas do dragão bateram, criando um vento tão forte que quase derrubou os intrusos. O monstro estava acordando."
             )
             digitar(
-                f"O dragão abriu seus olhos, e sua voz, como o eco de uma montanha, preencheu a caverna."
+                "O dragão abriu os olhos, e sua voz, como o eco de uma montanha, preencheu a caverna."
             )
             time.sleep(2)
             digitar(
-                f'"Quem ousa invadir meu domínio?!" Sua voz ressoava como um trovão distante, carregada de raiva e poder.Logo {heroi.nome} erguia a sua espada. "Vocês realmente acreditam que podem me enfrentar?"'
+                f'"Quem ousa invadir meu domínio?!" — bradou a criatura, sua voz ressoando como um trovão distante, carregada de raiva e poder. Logo {heroi.nome} ergueu a espada diante do inimigo. "Vocês realmente acreditam que podem me enfrentar?"'
             )
             digitar(
-                f"Com um movimento lento, ele se levantou, suas escamas brilhando de forma ameaçadora, e olhou diretamente para nós, seu olhar cortante como fogo."
+                "Com um movimento lento, o dragão se levantou, suas escamas brilhando de forma ameaçadora. Ele fitou os invasores com um olhar cortante como fogo."
             )
-            digitar(f'"Vocês estão no meu território agora. Não haverá misericórdia."')
+            digitar('"Vocês estão no meu território agora. Não haverá misericórdia."')
+
             turno = 1
             while heroi.esta_vivo() and dragao.esta_vivo():
                 acao = input("Deseja atacar (1) ou tomar poção (2)? ")
@@ -1031,8 +1032,9 @@ def jogar():
 
             digitar(
                 '"Isso é fantástico, você conseguiu..."'
-                f"Trevor te abraçava e no mesmo momento transparencia um sorriso maligna, então puxar uma espada estranha da sua bainha e te atravessar pela barriga"
+                " — disse Trevor, enquanto o abraçava. No mesmo instante, seu sorriso se transformou em uma expressão maligna. Ele puxou uma espada estranha da bainha e atravessou a barriga de seu companheiro com um golpe traiçoeiro."
             )
+
             heroi.vida -= heroi.vida // 2
             digitar(f"{heroi.nome} está com {heroi.vida} de vida")
             traidor = Personagem("Trevor", heroi.vida, "Masculino")
