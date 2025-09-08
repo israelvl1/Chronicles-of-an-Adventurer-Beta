@@ -2,7 +2,7 @@ import sys
 import os
 import json
 from PyQt6.QtWidgets import QApplication
-
+import platform
 # Adiciona diretório atual ao path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
