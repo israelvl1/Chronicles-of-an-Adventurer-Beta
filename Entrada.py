@@ -23,7 +23,7 @@ class PerguntarDialog(QDialog):
         self.label, self.timer = mostrar_primeira_imagem(self.layout, self.texto_ascii1)
 
         # Depois de 3 segundos, trocar para segunda imagem
-        QTimer.singleShot(3000, self.trocar_para_segunda)
+        QTimer.singleShot(5000, self.trocar_para_segunda)
 
     def trocar_para_segunda(self):
         self.label, self.timer = trocar_imagem(self.layout, self.texto_ascii2)  # ⬅️ usar self.texto_ascii2
@@ -268,7 +268,7 @@ def mostrar_primeira_imagem(layout, texto_ascii):
     index_tracker = {"index": 0}
     timer = QTimer()
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
-    timer.start(10)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
+    timer.start(3)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
 
     return label, timer
 
@@ -289,7 +289,7 @@ def trocar_imagem(layout, texto_ascii):
     index_tracker = {"index": 0}
     timer = QTimer()
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
-    timer.start(10)
+    timer.start(3)
 
     return label, timer
 
@@ -364,7 +364,7 @@ def mostrar_terceira_imagem(layout, texto_ascii):
     index_tracker = {"index": 0}
     timer = QTimer()
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
-    timer.start(10)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
+    timer.start(3)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
 
     return label
     
@@ -381,7 +381,7 @@ def mostrar_erro_imagem(layout, texto_ascii):
     index_tracker = {"index": 0}
     timer = QTimer()
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
-    timer.start(10)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
+    timer.start(3)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
 
     return label
     
@@ -398,7 +398,7 @@ def mostrar_fim(layout, texto_ascii):
     index_tracker = {"index": 0}
     timer = QTimer()
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
-    timer.start(10)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
+    timer.start(3)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
 
     return label
     
