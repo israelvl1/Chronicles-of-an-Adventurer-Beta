@@ -268,7 +268,7 @@ def mostrar_primeira_imagem(layout, texto_ascii):
     index_tracker = {"index": 0}
     timer = QTimer()
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
-    timer.start(3)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
+    timer.start(1)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
 
     return label, timer
 
@@ -289,7 +289,7 @@ def trocar_imagem(layout, texto_ascii):
     index_tracker = {"index": 0}
     timer = QTimer()
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
-    timer.start(3)
+    timer.start(1)
 
     return label, timer
 
