@@ -314,7 +314,7 @@ class DialogMensagemFixa(QDialog):
     def __init__(self, texto_ascii):
         super().__init__()
         self.setWindowTitle("Imagens ASCII")
-        self.setFixedSize(1000, 300)
+        self.setFixedSize(900, 300)
         self.setStyleSheet("background-color: black;")
         pixmap = QPixmap()    
         pixmap.loadFromData(QByteArray.fromBase64(icone_base64))
@@ -343,7 +343,7 @@ class DialogMensagemFim(QDialog):
     def __init__(self, texto_ascii):
         super().__init__()
         self.setWindowTitle("Fim do Jogo")
-        self.setFixedSize(1000, 300)
+        self.setFixedSize(800, 300)
         self.setStyleSheet("background-color: black; color: lime;")
         pixmap = QPixmap()
         pixmap.loadFromData(QByteArray.fromBase64(icone_base64))
