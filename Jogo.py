@@ -1131,7 +1131,7 @@ def jogar():
                 digitar("☁️ O vento soprou leve... e as cinzas dançaram no ar, como se o próprio destino dissesse: 'já basta'.")
 
                 time.sleep(3)
-                exibir_mensagem_final(ascii3)
+                exibir_mensagem_final(ascii5)
                 fechar_prompt()
                 
             else:
