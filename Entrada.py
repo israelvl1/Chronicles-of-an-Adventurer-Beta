@@ -309,7 +309,7 @@ class DialogMensagemFixa(QDialog):
     def __init__(self, texto_ascii):
         super().__init__()
         self.setWindowTitle("Imagens ASCII")
-        self.setFixedSize(700, 300)
+        self.setFixedSize(800, 300)
         self.setStyleSheet("background-color: black;")
 
         layout = QVBoxLayout()
@@ -317,15 +317,19 @@ class DialogMensagemFixa(QDialog):
 
         mostrar_terceira_imagem(layout, texto_ascii)
 
+        # Fecha automaticamente após 5 segundos (5000 ms)
+        QTimer.singleShot(5000, self.accept)
+
     def closeEvent(self, event):
-        nao_fechar(event)
+        nao_fechar(event)  # Impede fechamento manual, se necessário
+
 
 # Função para exibir uma janela com mensagem de erro
 class DialogMensagemErro(QDialog):
     def __init__(self, texto_ascii):
         super().__init__()
         self.setWindowTitle("Imagens ASCII - Erro")
-        self.setFixedSize(700, 300)
+        self.setFixedSize(800, 300)
         self.setStyleSheet("background-color: black;")
 
         layout = QVBoxLayout()
@@ -341,7 +345,7 @@ class DialogMensagemErro(QDialog):
     def __init__(self, texto_ascii):
         super().__init__()
         self.setWindowTitle("Imagens ASCII - Erro")
-        self.setFixedSize(700, 300)
+        self.setFixedSize(800, 300)
         self.setStyleSheet("background-color: black;")
 
         layout = QVBoxLayout()
