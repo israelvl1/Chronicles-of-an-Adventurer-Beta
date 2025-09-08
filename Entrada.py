@@ -1,105 +1,93 @@
-import sys
-import os
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import tkinter as tk
-from tkinter import messagebox
-import time
+from PyQt6.QtWidgets import (
+    QApplication, QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QMessageBox
+)
+from PyQt6.QtGui import QFont
+from PyQt6.QtCore import Qt, QTimer
 import sys
 
+def perguntar_qt():
+    class PerguntaDialog(QDialog):
+        def __init__(self):
+            super().__init__()
+            self.setWindowTitle("Projeto RPG")
+            self.setFixedSize(800, 600)
+            self.setStyleSheet("background-color: black; color: lime;")
+            self.resultado = None
 
-def perguntar():
-    # Dicionário para armazenar a escolha do usuário ("Sim" ou "Não")
-    escolha = {"valor": None}
+            self.layout = QVBoxLayout()
+            self.setLayout(self.layout)
 
-    # Função chamada quando o botão "Sim" é clicado
-    def minha_funcao():
-        escolha["valor"] = "Sim"  # Armazena a resposta
-        root.destroy()  # Fecha a janela
+            # Label para o ASCII
+            self.label_ascii = QLabel("")
+            self.label_ascii.setFont(QFont("Courier", 7))
+            self.label_ascii.setStyleSheet("color: lime; background-color: black;")
+            self.label_ascii.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+            self.label_ascii.setWordWrap(True)
+            self.layout.addWidget(self.label_ascii)
 
-    # Função chamada quando o botão "Não" é clicado
-    def outra_funcao():
-        escolha["valor"] = "Não"  # Armazena a resposta
-        root.destroy()  # Fecha a janela
+            # Carrega o texto ASCII (parte 2 terá essa função)
+            self.texto_ascii = obter_ascii()  # Função que fornecerá o texto (definiremos já)
+            self.index_letra = 0
 
-    # Função que cria e exibe os botões "Sim" e "Não"
-    def mostrar_botoes():
-        botoes_frame = tk.Frame(frame, bg="black")  # Frame para agrupar os botões
-        botoes_frame.pack(pady=20)  # Espaçamento vertical
+            # Timer para simular digitação
+            self.index_tracker = {"index": 0}
+            self.timer = QTimer(self)
+            self.timer.timeout.connect(
+                lambda: escrever_ascii(self.label_ascii, self.texto_ascii, self.index_tracker, self.timer)
+            )
+            self.timer.start(1)
 
-        # Botão "Sim" com estilos personalizados
-        button_sim = tk.Button(
-            botoes_frame,
-            text="Sim",
-            command=minha_funcao,
-            bg="black",
-            fg="lime",
-            activebackground="darkgreen",
-            activeforeground="orange",
-        )
-        button_sim.pack(
-            side="left", padx=10
-        )  # Empacota à esquerda com espaçamento horizontal
+            # Timer para mostrar os botões depois de 1s
+            QTimer.singleShot(1000, self.mostrar_botoes)
 
-        # Botão "Não" com estilos personalizados
-        button_nao = tk.Button(
-            botoes_frame,
-            text="Não",
-            command=outra_funcao,
-            bg="black",
-            fg="lime",
-            activebackground="darkgreen",
-            activeforeground="orange",
-        )
-        button_nao.pack(side="left", padx=10)
+        def mostrar_botoes(self):
+            botoes = QHBoxLayout()
 
-    # Cria a janela principal do Tkinter
-    root = tk.Tk()
-    root.title("Projeto RPG")
-    root.geometry("800x600")  # Define tamanho fixo da janela
-    root.resizable(False, False)  # Desativa redimensionamento
-    root.configure(bg="black")  # Define fundo preto
+            btn_sim = QPushButton("Sim")
+            btn_sim.setStyleSheet("background-color: black; color: lime;")
+            btn_sim.clicked.connect(self.escolher_sim)
+            botoes.addWidget(btn_sim)
 
-    # Impede o fechamento da janela pelo botão X (a função nao_fechar não está definida aqui)
-    root.protocol("WM_DELETE_WINDOW", nao_fechar)
+            btn_nao = QPushButton("Não")
+            btn_nao.setStyleSheet("background-color: black; color: lime;")
+            btn_nao.clicked.connect(self.escolher_nao)
+            botoes.addWidget(btn_nao)
 
-    # Cria um frame dentro da janela para organizar widgets
-    frame = tk.Frame(root, bg="black")
-    frame.pack(fill="both", expand=True)
+            self.layout.addLayout(botoes)
 
-    # Estas funções devem existir no seu código (não estão definidas aqui)
-    mostrar_primeira_imagem(frame, root)  # Mostra a primeira imagem na tela
-    limpar_tela(frame)  # Limpa a tela, removendo widgets anteriores
-    trocar_imagem(frame, root)  # Troca a imagem exibida (talvez animação ou sequência)
+        def escolher_sim(self):
+            self.resultado = "Sim"
+            self.accept()
 
-    # Depois de 1 segundo, chama a função que exibe os botões "Sim" e "Não"
-    root.after(1000, mostrar_botoes)
+        def escolher_nao(self):
+            self.resultado = "Não"
+            self.accept()
 
-    # Inicia o loop principal da interface gráfica, que fica aguardando interações
-    root.mainloop()
-
-    # Retorna o valor escolhido ("Sim" ou "Não")
-    return escolha["valor"]
+        # Impede o botão "X" de fechar a janela
+        def closeEvent(self, event):
+            event.ignore()
 
 
 # Função para limpar todos os widgets dentro do frame (útil para trocar telas)
-def limpar_tela(frame):
-    for widget in frame.winfo_children():
-        widget.destroy()  # Remove cada widget filho do frame
+def limpar_tela(layout):
+    while layout.count():
+        item = layout.takeAt(0)
+        widget = item.widget()
+        if widget is not None:
+            widget.setParent(None)
 
 
 # Função para escrever texto ASCII lentamente em um label (efeito de digitação)
-def escrever_ascii(texto, label):
-    texto_final = ""
-    for letra in texto:
-        texto_final += letra
-        label.config(text=texto_final)  # Atualiza o texto do label
-        label.update()  # Força a atualização visual do label
-        time.sleep(0.00001)  # Pequena pausa para o efeito "máquina de escrever"
+def escrever_ascii(label, texto, index_tracker, timer):
+    if index_tracker["index"] < len(texto):
+        atual = label.text()
+        atual += texto[index_tracker["index"]]
+        label.setText(atual)
+        index_tracker["index"] += 1
+    else:
+        timer.stop()
 
-# Mostrar a primeira imagem
-def mostrar_primeira_imagem(frame, root):
-    ascii1 = r"""
+ascii1 = r"""
                                                                                                                                                                                      
                                                             .oPYo.  .oPYo. .oPYo.    ooooo .oPYo. o ooooo .oPYo.    .oPYo. .oPYo.  .oPYo.                                                             
                                                             8   `8  8    8 8    8    8     8.     8   8   8    8    8    8 8    8  8   `8                                                             
@@ -158,25 +146,7 @@ def mostrar_primeira_imagem(frame, root):
                                                              @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  
                                                          
     """
-    label = tk.Label(
-            frame,
-            text="",
-            font=("Courier", 5),
-            justify="left",
-            anchor="nw",
-            bg="black",       # Fundo do label preto
-            fg="lime"         # Texto verde fluorescente
-        )
-    label.pack(padx=20, pady=20)
-
-    escrever_ascii(ascii1, label)
-
-    
-
-# Trocar a imagem após o tempo
-def trocar_imagem(frame, root):
-    
-    ascii2 = r"""
+ ascii2 = r"""
     
    .%%%%%%..%%..%%..%%%%%%...%%%%...%%%%%%...%%%%...%%%%%...........%%%%%...%%%%%....%%%%....%%%%..
    ...%%....%%%.%%....%%....%%..%%....%%....%%..%%..%%..%%..........%%..%%..%%..%%..%%......%%..%%.
@@ -203,93 +173,7 @@ def trocar_imagem(frame, root):
                                         %%..%%..%%..%%...%%%%.. 
                                         
     """
-    label_novo = tk.Label(
-            frame,
-            text="",
-            font=("Courier", 6),
-            justify="left",
-            anchor="nw",
-            bg="black",       # Fundo do label preto
-            fg="lime"         # Texto verde fluorescente
-        )
-    label_novo.pack(padx=20, pady=20)
 
-    escrever_ascii(ascii2, label_novo)
-    
-# Função para impedir que o usuário feche a janela pelo botão X
-def nao_fechar():
-    # Mostra uma mensagem de aviso que a janela não pode ser fechada agora
-    messagebox.showwarning("Atenção", "Você não pode fechar esta janela agora.")  
-
-# Função para exibir uma janela com uma mensagem fixa (ex: imagem ASCII)
-def exibir_mensagem_fixa():
-    root = tk.Tk()                     # Cria a janela principal
-    root.title("Imagens ASCII")        # Define o título da janela
-    root.geometry("700x300")            # Define o tamanho fixo da janela
-    root.resizable(False, False)        # Impede redimensionamento
-    root.configure(bg="black")          # Fundo preto
-
-    # Bloqueia o fechamento da janela pelo botão X, chamando a função nao_fechar
-    root.protocol("WM_DELETE_WINDOW", nao_fechar)
-
-    frame = tk.Frame(root, bg="black")  # Cria um frame para organização
-    frame.pack(fill="both", expand=True) # Ocupa toda a janela
-
-    mostrar_terceira_imagem(frame)      # Exibe a terceira imagem (função externa)
-
-    limpar_tela(frame)                  # Limpa a tela, removendo widgets (curioso: já chamou imagem antes)
-
-    root.destroy()                     # Fecha a janela imediatamente (curioso aqui também)
-
-    root.mainloop()                    # Inicia o loop da interface (mas janela já foi destruída!)
-
-# Função para exibir uma janela com mensagem de erro
-def exibir_mensagem_erro():
-    root = tk.Tk()
-    root.title("Imagens ASCII")
-    root.geometry("700x300")
-    root.resizable(False, False)
-    root.configure(bg="black")
-
-    root.protocol("WM_DELETE_WINDOW", nao_fechar)
-
-    frame = tk.Frame(root, bg="black")
-    frame.pack(fill="both", expand=True)
-
-    mostrar_erro_imagem(frame)          # Exibe uma imagem de erro (função externa)
-
-    limpar_tela(frame)                  # Limpa o frame
-
-    root.destroy()                     # Fecha a janela imediatamente
-
-    root.mainloop()                    # Inicia o loop da interface (mesmo problema aqui)
-
-# Função para exibir uma mensagem final (ex: fim do programa) com pausa antes de fechar
-def exibir_mensagem_final():
-    root = tk.Tk()
-    root.title("Imagens ASCII")
-    root.geometry("700x300")
-    root.resizable(False, False)
-    root.configure(bg="black")
-
-    root.protocol("WM_DELETE_WINDOW", nao_fechar)
-
-    frame = tk.Frame(root, bg="black")
-    frame.pack(fill="both", expand=True)
-
-    mostrar_fim(frame)                 # Exibe mensagem/fim (função externa)
-
-    limpar_tela(frame)                 # Limpa o frame
-
-    time.sleep(5)                     # Pausa de 5 segundos para o usuário ver a mensagem
-
-    root.destroy()                    # Fecha a janela
-
-    root.mainloop()                   # Inicia o loop da interface (ainda com problema de ordem)
-
-# Mostrar a terceira imagem
-def mostrar_terceira_imagem(frame):
-    
     ascii3 = r"""
                                                        
     .............................................................................................................................................................................................................                                                         
@@ -319,23 +203,7 @@ def mostrar_terceira_imagem(frame):
                                                             .....................................................................................
 
     """
-    label = tk.Label(
-            frame,
-            text="",
-            font=("Courier",4),
-            justify="left",
-            anchor="nw",
-            bg="black",       # Fundo do label preto
-            fg="lime"         # Texto verde fluorescente
-        )
-    label.pack(padx=20, pady=20)
-
-    escrever_ascii(ascii3, label)
-    
-# Mostrar a terceira imagem
-def mostrar_erro_imagem(frame):
-    
-    ascii4 = r"""
+ascii4 = r"""
 
                                                             .%%%%%%.%%..%%........%%%%%%.%%%%%%.........%%%%..%%..%%.%%%%%%..%%%%..%%%%%%.%%%%%%.                                                         
                                                             .%%.....%%..%%..........%%...%%............%%..%%.%%..%%...%%...%%.....%%.......%%...                                                         
@@ -369,23 +237,8 @@ def mostrar_erro_imagem(frame):
                                                          .....................................................................................                                                                
         
     """
-    label = tk.Label(
-            frame,
-            text="",
-            font=("Courier",4),
-            justify="left",
-            anchor="nw",
-            bg="black",       # Fundo do label preto
-            fg="lime"         # Texto verde fluorescente
-        )
-    label.pack(padx=20, pady=20)
 
-    escrever_ascii(ascii4, label)
-    
-# Mostrar a terceira imagem
-def mostrar_fim(frame):
-    
-    ascii5 = r"""
+ ascii5 = r"""
     
                ______   .______   .______       __    _______      ___       _______   ______                
               /  __  \  |   _  \  |   _  \     |  |  /  _____|    /   \     |       \ /  __  \               
@@ -404,15 +257,149 @@ def mostrar_fim(frame):
 
     
     """
-    label = tk.Label(
-            frame,
-            text="",
-            font=("Courier",6),
-            justify="left",
-            anchor="nw",
-            bg="black",       # Fundo do label preto
-            fg="lime"         # Texto verde fluorescente
-        )
-    label.pack(padx=20, pady=20)
 
-    escrever_ascii(ascii5, label)
+# Mostrar a primeira imagem
+def mostrar_primeira_imagem(layout, texto_ascii):
+    label = QLabel()
+    label.setFont(QFont("Courier", 5))
+    label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+    label.setStyleSheet("background-color: black; color: lime;")
+    label.setText("")  # começa vazio
+
+    layout.addWidget(label)
+
+    index_tracker = {"index": 0}
+    timer = QTimer()
+    timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
+    timer.start(10)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
+
+    return label
+
+    
+
+# Trocar a imagem após o tempo
+def trocar_imagem(layout, texto_ascii):
+    label = QLabel()
+    label.setFont(QFont("Courier", 5))
+    label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+    label.setStyleSheet("background-color: black; color: lime;")
+    label.setText("")  # começa vazio
+
+    layout.addWidget(label)
+
+    index_tracker = {"index": 0}
+    timer = QTimer()
+    timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
+    timer.start(10)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
+
+    return label
+
+# Função para impedir que o usuário feche a janela pelo botão X
+def nao_fechar(event):
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Icon.Warning)
+    msg.setWindowTitle("Atenção")
+    msg.setText("Você não pode fechar esta janela agora.")
+    msg.exec()
+
+    event.ignore()  # Impede que a janela seja fechada
+
+# Função para exibir uma janela com uma mensagem fixa (ex: imagem ASCII)
+class DialogMensagemFixa(QDialog):
+    def __init__(self, texto_ascii):
+        super().__init__()
+        self.setWindowTitle("Imagens ASCII")
+        self.setFixedSize(700, 300)
+        self.setStyleSheet("background-color: black;")
+
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        mostrar_terceira_imagem(layout, texto_ascii)
+
+    def closeEvent(self, event):
+        nao_fechar(event)
+
+# Função para exibir uma janela com mensagem de erro
+class DialogMensagemErro(QDialog):
+    def __init__(self, texto_ascii):
+        super().__init__()
+        self.setWindowTitle("Imagens ASCII - Erro")
+        self.setFixedSize(700, 300)
+        self.setStyleSheet("background-color: black;")
+
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        mostrar_erro_imagem(layout, texto_ascii)
+
+    def closeEvent(self, event):
+        nao_fechar(event)
+
+# Função para exibir uma mensagem final (ex: fim do programa) com pausa antes de fechar
+class DialogMensagemErro(QDialog):
+    def __init__(self, texto_ascii):
+        super().__init__()
+        self.setWindowTitle("Imagens ASCII - Erro")
+        self.setFixedSize(700, 300)
+        self.setStyleSheet("background-color: black;")
+
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        mostrar_erro_imagem(layout, texto_ascii)
+
+    def closeEvent(self, event):
+        nao_fechar(event)
+
+# Mostrar a terceira imagem
+def mostrar_terceira_imagem(layout, texto_ascii):
+    label = QLabel()
+    label.setFont(QFont("Courier", 5))
+    label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+    label.setStyleSheet("background-color: black; color: lime;")
+    label.setText("")  # começa vazio
+
+    layout.addWidget(label)
+
+    index_tracker = {"index": 0}
+    timer = QTimer()
+    timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
+    timer.start(10)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
+
+    return label
+    
+# Mostrar a terceira imagem
+def mostrar_erro_imagem(layout, texto_ascii):
+    label = QLabel()
+    label.setFont(QFont("Courier", 5))
+    label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+    label.setStyleSheet("background-color: black; color: lime;")
+    label.setText("")  # começa vazio
+
+    layout.addWidget(label)
+
+    index_tracker = {"index": 0}
+    timer = QTimer()
+    timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
+    timer.start(10)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
+
+    return label
+    
+# Mostrar a terceira imagem
+def mostrar_fim(layout, texto_ascii):
+    label = QLabel()
+    label.setFont(QFont("Courier", 5))
+    label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+    label.setStyleSheet("background-color: black; color: lime;")
+    label.setText("")  # começa vazio
+
+    layout.addWidget(label)
+
+    index_tracker = {"index": 0}
+    timer = QTimer()
+    timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
+    timer.start(10)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
+
+    return label
+    
