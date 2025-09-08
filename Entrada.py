@@ -14,7 +14,7 @@ class PerguntarDialog(QDialog):
         self.setFixedSize(800, 600)
         self.setStyleSheet("background-color: black; color: lime;")
         self.resultado = None
-
+        pixmap = QPixmap()
         pixmap.loadFromData(QByteArray.fromBase64(icone_base64))
         self.setWindowIcon(QIcon(pixmap))
 
@@ -316,7 +316,7 @@ class DialogMensagemFixa(QDialog):
         self.setWindowTitle("Imagens ASCII")
         self.setFixedSize(1000, 300)
         self.setStyleSheet("background-color: black;")
-
+        pixmap = QPixmap()    
         pixmap.loadFromData(QByteArray.fromBase64(icone_base64))
         self.setWindowIcon(QIcon(pixmap))
 
@@ -345,7 +345,7 @@ class DialogMensagemFim(QDialog):
         self.setWindowTitle("Fim do Jogo")
         self.setFixedSize(1000, 300)
         self.setStyleSheet("background-color: black; color: lime;")
-
+        pixmap = QPixmap()
         pixmap.loadFromData(QByteArray.fromBase64(icone_base64))
         self.setWindowIcon(QIcon(pixmap))
 
@@ -377,7 +377,7 @@ class DialogMensagemErro(QDialog):
         self.setWindowTitle("Imagens ASCII - Erro")
         self.setFixedSize(900, 300)
         self.setStyleSheet("background-color: black; color: red;")
-
+        pixmap = QPixmap()
         pixmap.loadFromData(QByteArray.fromBase64(icone_base64))
         self.setWindowIcon(QIcon(pixmap))
 
