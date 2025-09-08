@@ -13,20 +13,22 @@ class PerguntarDialog(QDialog):
         self.setStyleSheet("background-color: black; color: lime;")
         self.resultado = None
 
+        self.texto_ascii1 = texto_ascii1  # ⬅️ salvar como atributo
+        self.texto_ascii2 = texto_ascii2  # ⬅️ salvar como atributo
+
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
         # Mostrar primeira imagem
-        self.label, self.timer = mostrar_primeira_imagem(self.layout, texto_ascii1)
+        self.label, self.timer = mostrar_primeira_imagem(self.layout, self.texto_ascii1)
 
         # Depois de 3 segundos, trocar para segunda imagem
         QTimer.singleShot(3000, self.trocar_para_segunda)
 
     def trocar_para_segunda(self):
-        self.label, self.timer = trocar_imagem(self.layout, texto_ascii2)
-        # Após mais 3 segundos, mostrar os botões
+        self.label, self.timer = trocar_imagem(self.layout, self.texto_ascii2)  # ⬅️ usar self.texto_ascii2
         QTimer.singleShot(3000, self.mostrar_botoes)
-
+        
     def mostrar_botoes(self):
         botoes_layout = QHBoxLayout()
 
