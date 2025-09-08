@@ -5,67 +5,62 @@ from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt, QTimer
 import sys
 
-def perguntar_qt():
-    class PerguntaDialog(QDialog):
-        def __init__(self):
-            super().__init__()
-            self.setWindowTitle("Projeto RPG")
-            self.setFixedSize(800, 600)
-            self.setStyleSheet("background-color: black; color: lime;")
-            self.resultado = None
+class PerguntarDialog(QDialog):
+    def __init__(self, texto_ascii1, texto_ascii2):
+        super().__init__()
+        self.setWindowTitle("Projeto RPG")
+        self.setFixedSize(800, 600)
+        self.setStyleSheet("background-color: black; color: lime;")
+        self.resultado = None
 
-            self.layout = QVBoxLayout()
-            self.setLayout(self.layout)
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
 
-            # Label para o ASCII
-            self.label_ascii = QLabel("")
-            self.label_ascii.setFont(QFont("Courier", 7))
-            self.label_ascii.setStyleSheet("color: lime; background-color: black;")
-            self.label_ascii.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
-            self.label_ascii.setWordWrap(True)
-            self.layout.addWidget(self.label_ascii)
+        # Mostrar primeira imagem
+        self.label, self.timer = mostrar_primeira_imagem(self.layout, texto_ascii1)
 
-            # Carrega o texto ASCII (parte 2 terá essa função)
-            self.texto_ascii = obter_ascii()  # Função que fornecerá o texto (definiremos já)
-            self.index_letra = 0
+        # Depois de 3 segundos, trocar para segunda imagem
+        QTimer.singleShot(3000, self.trocar_para_segunda)
 
-            # Timer para simular digitação
-            self.index_tracker = {"index": 0}
-            self.timer = QTimer(self)
-            self.timer.timeout.connect(
-                lambda: escrever_ascii(self.label_ascii, self.texto_ascii, self.index_tracker, self.timer)
-            )
-            self.timer.start(1)
+    def trocar_para_segunda(self):
+        self.label, self.timer = trocar_imagem(self.layout, texto_ascii2)
+        # Após mais 3 segundos, mostrar os botões
+        QTimer.singleShot(3000, self.mostrar_botoes)
 
-            # Timer para mostrar os botões depois de 1s
-            QTimer.singleShot(1000, self.mostrar_botoes)
+    def mostrar_botoes(self):
+        botoes_layout = QHBoxLayout()
 
-        def mostrar_botoes(self):
-            botoes = QHBoxLayout()
+        btn_sim = QPushButton("Sim")
+        btn_sim.setStyleSheet("background-color: black; color: lime;")
+        btn_sim.clicked.connect(self.escolher_sim)
+        botoes_layout.addWidget(btn_sim)
 
-            btn_sim = QPushButton("Sim")
-            btn_sim.setStyleSheet("background-color: black; color: lime;")
-            btn_sim.clicked.connect(self.escolher_sim)
-            botoes.addWidget(btn_sim)
+        btn_nao = QPushButton("Não")
+        btn_nao.setStyleSheet("background-color: black; color: lime;")
+        btn_nao.clicked.connect(self.escolher_nao)
+        botoes_layout.addWidget(btn_nao)
 
-            btn_nao = QPushButton("Não")
-            btn_nao.setStyleSheet("background-color: black; color: lime;")
-            btn_nao.clicked.connect(self.escolher_nao)
-            botoes.addWidget(btn_nao)
+        self.layout.addLayout(botoes_layout)
 
-            self.layout.addLayout(botoes)
+    def escolher_sim(self):
+        self.resultado = "Sim"
+        self.accept()
 
-        def escolher_sim(self):
-            self.resultado = "Sim"
-            self.accept()
+    def escolher_nao(self):
+        self.resultado = "Não"
+        self.accept()
 
-        def escolher_nao(self):
-            self.resultado = "Não"
-            self.accept()
+    def closeEvent(self, event):
+        # Se quiser impedir fechar com X, use event.ignore()
+        event.accept()
 
-        # Impede o botão "X" de fechar a janela
-        def closeEvent(self, event):
-            event.ignore()
+def perguntar_qt(texto_ascii1, texto_ascii2):
+    app = QApplication.instance()
+    if not app:
+        app = QApplication(sys.argv)
+    dialog = PerguntarDialog(texto_ascii1, texto_ascii2)
+    dialog.exec()
+    return dialog.resultado
 
 
 # Função para limpar todos os widgets dentro do frame (útil para trocar telas)
@@ -279,18 +274,20 @@ def mostrar_primeira_imagem(layout, texto_ascii):
 
 # Trocar a imagem após o tempo
 def trocar_imagem(layout, texto_ascii):
+    limpar_tela(layout)  # Limpa o layout antes de trocar
+
     label = QLabel()
     label.setFont(QFont("Courier", 5))
     label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
     label.setStyleSheet("background-color: black; color: lime;")
-    label.setText("")  # começa vazio
+    label.setText("")
 
     layout.addWidget(label)
 
     index_tracker = {"index": 0}
     timer = QTimer()
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
-    timer.start(10)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
+    timer.start(10)
 
     return label
 
