@@ -8,7 +8,7 @@ CONFIG_FILE = "config.json"
 import math
 import base64
 import sys
-import os
+import platform
 import json
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QComboBox, QDialog, QLabel
 from PyQt6.QtGui import QIcon, QPixmap, QFont
@@ -17,6 +17,29 @@ icone_base64 = b"""AAABAAEAqwAAAAEAIAAoxAIAFgAAACgAAACrAAAAAAIAAAEAIAAAAAAAAKwCA
 
 
 CONFIG_FILE = "config.json"
+
+ansi_cores = {
+    "0": "30", "1": "34", "2": "32", "3": "36", "4": "31", "5": "35",
+    "6": "33", "7": "37", "8": "90", "9": "94", "A": "92", "B": "96",
+    "C": "91", "D": "95", "E": "93", "F": "97"
+}
+
+
+
+def aplicar_cor_console(codigo):
+    if len(codigo) != 2:
+        return  # Evita erro se código for inválido
+
+    texto, fundo = codigo[0].upper(), codigo[1].upper()
+
+    if os.name == "nt":
+        # Windows usa comando interno do terminal
+        os.system(f"color {codigo}")
+    else:
+        # ANSI no Linux/macOS
+        ansi_texto = ansi_cores.get(texto, "37")  # padrão: branco
+        ansi_fundo = ansi_cores.get(fundo, "40").replace("3", "4", 1)  # converte fg 3x → bg 4x
+        print(f"\033[{ansi_texto};{ansi_fundo}m", end="")
 
 # Função para salvar a cor escolhida no arquivo de configuração
 def salvar_cor(codigo_cor):
@@ -122,3 +145,4 @@ class TelaSimples(QDialog):
             # Fecha a janela principal
             if self.parent():
                 self.parent().close()  # Fecha a janela principal (se houver)
+
