@@ -5,7 +5,7 @@ sys.path.append(
 ) 
 import json
 from PyQt6.QtWidgets import QApplication
-from Jogo import *
+import Jogo
 import Personagem
 import Entrada
 import ResultadoDado
@@ -41,4 +41,4 @@ if sys.platform.startswith("win"):
     os.system(f'color {codigo_cor}')  # Aplica a cor salva
 
 # Inicia o jogo após a janela de cor ser fechada
-jogar()
+Jogo.jogar()
