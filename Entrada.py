@@ -23,7 +23,7 @@ class PerguntarDialog(QDialog):
         self.label, self.timer = mostrar_primeira_imagem(self.layout, self.texto_ascii1)
 
         # Depois de 3 segundos, trocar para segunda imagem
-        QTimer.singleShot(15000, self.trocar_para_segunda)
+        QTimer.singleShot(13000, self.trocar_para_segunda)
 
     def trocar_para_segunda(self):
         self.label, self.timer = trocar_imagem(self.layout, self.texto_ascii2)  # ⬅️ usar self.texto_ascii2
