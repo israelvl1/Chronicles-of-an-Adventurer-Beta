@@ -232,7 +232,7 @@ ascii4 = r"""
                                                          .....................................................................................                                                                
         
     """
-    
+
 ascii5 = r"""
     
                ______   .______   .______       __    _______      ___       _______   ______                
@@ -268,7 +268,7 @@ def mostrar_primeira_imagem(layout, texto_ascii):
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
     timer.start(10)  # atualiza a cada 10 ms (ajuste para o efeito desejado)
 
-    return label, timer
+    return label
 
     
 
@@ -289,7 +289,7 @@ def trocar_imagem(layout, texto_ascii):
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
     timer.start(10)
 
-    return label, timer
+    return label
 
 # Função para impedir que o usuário feche a janela pelo botão X
 def nao_fechar(event):
