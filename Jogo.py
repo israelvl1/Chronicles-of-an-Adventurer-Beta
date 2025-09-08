@@ -140,7 +140,7 @@ def tentar_desviar(porcentagem):
     
 def jogar():
     while True:
-        escolha = perguntar()   # <-- pega "Sim" ou "Não" do Tkinter
+        escolha = resposta = perguntar_qt(ascii1, ascii2)
         if escolha == "Não":
             time.sleep(3)
             fechar_prompt()
