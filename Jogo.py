@@ -37,14 +37,14 @@ def criar_personagem(gerenciador):
     nome = input(
         "Digite o nome do seu personagem: "
     ).capitalize()  # Recebe nome e capitaliza
-    exibir_mensagem_fixa()  # Exibe mensagem (função externa)
+    exibir_mensagem_fixa(ascii3) # Exibe mensagem (função externa)
     sexo = input("Sexo do personagem: ").capitalize()  # Recebe sexo e capitaliza
 
     # Verifica se sexo está correto; caso contrário, exibe erro e fecha programa
     if sexo == "Masculino" or sexo == "Feminino":
         print("")
     else:
-        exibir_mensagem_erro()
+        exibir_mensagem_erro(ascii4)
         time.sleep(3)
         fechar_prompt()
 
