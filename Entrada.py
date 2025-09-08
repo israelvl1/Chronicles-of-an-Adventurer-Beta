@@ -4,6 +4,8 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt, QTimer
 import sys
+import time
+
 
 class PerguntarDialog(QDialog):
     def __init__(self, texto_ascii1, texto_ascii2):
@@ -309,7 +311,7 @@ class DialogMensagemFixa(QDialog):
     def __init__(self, texto_ascii):
         super().__init__()
         self.setWindowTitle("Imagens ASCII")
-        self.setFixedSize(800, 300)
+        self.setFixedSize(1000, 300)
         self.setStyleSheet("background-color: black;")
 
         layout = QVBoxLayout()
@@ -317,49 +319,91 @@ class DialogMensagemFixa(QDialog):
 
         mostrar_terceira_imagem(layout, texto_ascii)
 
+        self._fechamento_permitido = False
+        QTimer.singleShot(8000, self.permitir_fechamento)
+
+    def permitir_fechamento(self):
+        self._fechamento_permitido = True
+        self.accept()
+
+    def closeEvent(self, event):
+        if self._fechamento_permitido:
+            event.accept()  # permite fechar
+        else:
+            event.ignore()  # bloqueia fechamento manual
+
+
+class DialogMensagemFim(QDialog):
+    def __init__(self, texto_ascii):
+        super().__init__()
+        self.setWindowTitle("Fim do Jogo")
+        self.setFixedSize(1000, 300)
+        self.setStyleSheet("background-color: black; color: lime;")
+
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        mostrar_fim(layout, texto_ascii)
+
         # Fecha automaticamente após 5 segundos (5000 ms)
         QTimer.singleShot(5000, self.accept)
 
     def closeEvent(self, event):
-        nao_fechar(event)  # Impede fechamento manual, se necessário
+        # Se quiser impedir fechamento manual antes do tempo, descomente abaixo:
+        # event.ignore()
+        event.accept()
+
+def exibir_mensagem_fim(texto_ascii):
+    app = QApplication.instance()
+    if not app:
+        app = QApplication([])
+
+    dialog = DialogMensagemFim(texto_ascii)
+    dialog.exec()
 
 
-# Função para exibir uma janela com mensagem de erro
 class DialogMensagemErro(QDialog):
     def __init__(self, texto_ascii):
         super().__init__()
         self.setWindowTitle("Imagens ASCII - Erro")
-        self.setFixedSize(800, 300)
-        self.setStyleSheet("background-color: black;")
+        self.setFixedSize(900, 300)
+        self.setStyleSheet("background-color: black; color: red;")
 
         layout = QVBoxLayout()
         self.setLayout(layout)
 
         mostrar_erro_imagem(layout, texto_ascii)
 
-    def closeEvent(self, event):
-        nao_fechar(event)
+        self._fechamento_permitido = False
+        # Fecha automaticamente após 5 segundos (5000 ms)
+        QTimer.singleShot(8000, self.permitir_fechamento)
 
-# Função para exibir uma mensagem final (ex: fim do programa) com pausa antes de fechar
-class DialogMensagemErro(QDialog):
-    def __init__(self, texto_ascii):
-        super().__init__()
-        self.setWindowTitle("Imagens ASCII - Erro")
-        self.setFixedSize(800, 300)
-        self.setStyleSheet("background-color: black;")
-
-        layout = QVBoxLayout()
-        self.setLayout(layout)
-
-        mostrar_erro_imagem(layout, texto_ascii)
+    def permitir_fechamento(self):
+        self._fechamento_permitido = True
+        self.accept()
 
     def closeEvent(self, event):
-        nao_fechar(event)
+        if self._fechamento_permitido:
+            event.accept()
+        else:
+            event.ignore()
+
+def exibir_mensagem_erro(texto_ascii):
+    app = QApplication.instance()
+    if not app:
+        app = QApplication([])
+
+    dialog = DialogMensagemErro(texto_ascii)
+    dialog.exec()
+
         
 def exibir_mensagem_fixa(texto_ascii):
-    app = QApplication([])
+    app = QApplication.instance()
+    if not app:
+        app = QApplication([])
+
     dialog = DialogMensagemFixa(texto_ascii)
-    dialog.exec()
+    dialog.exec()  # mostra modal, bloqueia até fechar
 
 # Mostrar a terceira imagem
 def mostrar_terceira_imagem(layout, texto_ascii):
@@ -374,7 +418,7 @@ def mostrar_terceira_imagem(layout, texto_ascii):
     index_tracker = {"index": 0}
     timer = QTimer()
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
-    timer.start(3)  # atualiza a cada 3 ms (ajuste para o efeito desejado)
+    timer.start(1)  # atualiza a cada 3 ms (ajuste para o efeito desejado)
 
     return label
     
@@ -391,7 +435,7 @@ def mostrar_erro_imagem(layout, texto_ascii):
     index_tracker = {"index": 0}
     timer = QTimer()
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
-    timer.start(3)  # atualiza a cada 3 ms (ajuste para o efeito desejado)
+    timer.start(1)  # atualiza a cada 3 ms (ajuste para o efeito desejado)
 
     return label
     
@@ -408,7 +452,7 @@ def mostrar_fim(layout, texto_ascii):
     index_tracker = {"index": 0}
     timer = QTimer()
     timer.timeout.connect(lambda: escrever_ascii(label, texto_ascii, index_tracker, timer))
-    timer.start(3)  # atualiza a cada 3 ms (ajuste para o efeito desejado)
+    timer.start(1)  # atualiza a cada 3 ms (ajuste para o efeito desejado)
 
     return label
     
