@@ -351,6 +351,11 @@ class DialogMensagemErro(QDialog):
 
     def closeEvent(self, event):
         nao_fechar(event)
+        
+def exibir_mensagem_fixa(texto_ascii):
+    app = QApplication([])
+    dialog = DialogMensagemFixa(texto_ascii)
+    dialog.exec()
 
 # Mostrar a terceira imagem
 def mostrar_terceira_imagem(layout, texto_ascii):
