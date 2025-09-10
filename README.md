@@ -1,4 +1,4 @@
-## RPG-BetaJourney
+## Chronicles-of-an-Adventurer-Beta
 Um jogo de RPG simples em Python com criação de personagens, combate por turnos e inimigos aleatórios. Ideal para iniciantes em programação, com um sistema de combate divertido e fácil de entender.
 Ideal para iniciantes que estão aprendendo lógica de programação ou querem praticar Python de forma divertida.
 
@@ -19,11 +19,11 @@ Ideal para iniciantes que estão aprendendo lógica de programação ou querem p
 1. Instale o Python (recomendado Python 3.10 ou superior)
 2. Baixe o projeto ou clone o repositório:
    ```bash
-   git clone https://github.com/israelvl1/RPG-BetaJourney
+   git clone https://github.com/israelvl1/Chronicles-of-an-Adventurer-Beta
    ```
 3. Navegue até a pasta do projeto e execute:
    ```bash
-   python RPG-BetaJourney.py
+   python Chronicles-of-an-Adventurer-Beta.py
    ```
 
 ---
